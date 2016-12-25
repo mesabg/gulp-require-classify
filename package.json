@@ -1,0 +1,32 @@
+{
+  "name": "gulp-require-classify",
+  "version": "1.0.0",
+  "description": "A gulp plug-in to make requireJS and ng-classify compatible with a simple syntax",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mesabg/gulp-require-classify.git"
+  },
+  "keywords": [
+    "AngularJS",
+    "RequireJS",
+    "ng-classify"
+  ],
+  "author": "Moises Berenguer (mesa_bg)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mesabg/gulp-require-classify/issues"
+  },
+  "homepage": "https://github.com/mesabg/gulp-require-classify#readme",
+  "devDependencies": {
+    "coffee-script": "^1.12.2",
+    "event-stream": "^3.3.4",
+    "gulp-util": "^3.0.7",
+    "indent-string": "^3.0.0",
+    "ng-classify": "^4.1.1",
+    "unindent": "^2.0.0"
+  }
+}
