@@ -1,58 +1,51 @@
-es         = require 'event-stream'
-ngClassify = require 'ng-classify'
-gutil      = require 'gulp-util'
-unindent   = require 'unindent'
-indent     = require 'indent-string'
+events       = require 'events'
+event_stream = require 'event-stream'
+ng_classify  = require 'ng-classify'
+gulp_util    = require 'gulp-util'
+unindent     = require 'unindent'
+indent       = require 'indent-string'
 
 
 module.exports = (opt) ->
 	modifyFile = (file) ->
+		# Handle Errors
+		emitter = new events.EventEmitter
+
 		return if file.isNull()
-			@emit 'data', file
+			emitter.emit 'data', file
 
 		return if file.isStream()
-			@emit 'error', new gutil.PluginError 'gulp-require-classify', 'Streaming not supported'
+			emitter.emit 'error', new gulp_util.PluginError 'gulp-require-classify', 'Streaming not supported'
 
 		fileString = file.contents.toString 'utf8'
 
-		fileData = ''
+		file.contents = new Buffer fileString.replace /@classify((.|\n|\t|\r)*)@!classify/g, (Match, subMatch, lastCharacter, numberOfCharacters, completeString)->
+			# Preparing Data
+			processString = subMatch.match(/^((\n|\t|\r)*?)[#|a-z]/i)[1]
+			tabSize = processString.substr(processString.lastIndexOf('\n'), processString.length).split('\t').length - 1
 
-		fileString.split("@classify").map (element) -> 
-			# Compiling Element
-			tab = 0
-			chain = ''
-
-			for character in element
-				if character.match /[a-zA-Z0-9#]/ 
-					break
-				else 
-					chain += character
-
-			for character in chain
-				if character == '\t'
-					tab++
-
-			if element.lastIndexOf "\n" > 0
-				element = element.substring 0, element.lastIndexOf "\n"
-
+			# Processing Data
 			try
+				# Applying Options
 				isFunction = opt instanceof Function
 				options    = if isFunction then opt(file) else opt
 
-				for value in [1..tab]
-					element    = unindent element 
+				# Unindenting
+				for value in [1..tabSize]
+					subMatch = unindent subMatch 
 
+				# Compiling
 				data       = ''
-				data       = ngClassify element, options
-				data       = indent data, tab, '\t'
-				fileData   += data
+				data       = ng_classify subMatch, options
+
+				# Reindenting
+				return indent data, tabSize, '\t'
 
 			catch err
+				# Catching Errors
 				err.filename = file.path
-				return @emit 'error', new gutil.PluginError 'gulp-require-classify', err
+				return emitter.emit 'error', new gulp_util.PluginError 'gulp-require-classify', err
 
-		file.contents = new Buffer fileData
+		emitter.emit 'data', file
 
-		@emit 'data', file
-
-	es.through modifyFile
+	event_stream.through modifyFile
