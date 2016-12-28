@@ -8,7 +8,7 @@ indent       = require 'indent-string'
 
 module.exports = (opt) ->
 	modifyFile = (file) ->
-		# Handle Errors
+		# Handle Events
 		emitter = new events.EventEmitter
 
 		return if file.isNull()
@@ -44,8 +44,9 @@ module.exports = (opt) ->
 			catch err
 				# Catching Errors
 				err.filename = file.path
+				console.log 'Error in :=> ' + err.filename
 				return emitter.emit 'error', new gulp_util.PluginError 'gulp-require-classify', err
 
-		emitter.emit 'data', file
+		@emit 'data', file
 
 	event_stream.through modifyFile

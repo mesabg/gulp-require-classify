@@ -20,8 +20,9 @@ npm install gulp-require-classify --save-dev
 
 ### Use
 
-Using tag "@classify" and "@!classify" code inside of them are going to be compiled using ng-classify plug in, no matter indentation.
+Using tags "@classify" and "@!classify" code inside of them are going to be compiled using ng-classify plug in, no matter indentation.
 
+Input Code
 ```
 # Main Application
 define [
@@ -37,9 +38,33 @@ define [
 
 	# Main Controller Class
 	class Main extends Controller
-		constructor: ($scope, $location) ->
+		constructor: ($scope) ->
 			$scope.msg = "Running"
 	@!classify
+```
+
+Output Code
+```
+# Main Application
+define [
+	
+], () ->
+	'use strict'
+	
+	
+	# Main Application Class
+	class App then constructor: -> return [
+		'ngRoute'
+	]
+
+	# Main Controller Class
+	class Main
+		constructor: ($scope) ->
+			$scope.msg = "Running"
+
+
+	angular.module('app', new App())
+	.controller('mainController', ['$scope', Main])
 ```
 
 ## Built With
@@ -56,8 +81,8 @@ define [
 
 ## License
 
-This is an unlicensed project - see the [LICENSE.md](LICENSE.md) file for details
+This is an unlicensed project - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
 
-* Solve ng-classify problem using requireJS
+* Solving ng-classify problem using requireJS
