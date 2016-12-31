@@ -6,7 +6,8 @@ unindent     = require 'unindent'
 indent       = require 'indent-string'
 
 
-module.exports = (opt) ->
+module.exports = (opt) =>
+	console.log this
 	modifyFile = (file) ->
 		# Handle Events
 		emitter = new events.EventEmitter
@@ -45,6 +46,8 @@ module.exports = (opt) ->
 				# Catching Errors
 				err.filename = file.path
 				console.log 'Error in :=> ' + err.filename
+				emitter.on 'error', (err) -> 
+					console.log err.stack
 				return emitter.emit 'error', new gulp_util.PluginError 'gulp-require-classify', err
 
 		@emit 'data', file
