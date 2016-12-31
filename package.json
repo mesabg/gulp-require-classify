@@ -1,6 +1,6 @@
 {
   "name": "gulp-require-classify",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "A gulp plug-in to make requireJS and ng-classify compatible with a simple syntax",
   "main": "index.js",
   "scripts": {
